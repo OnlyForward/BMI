@@ -1,3 +1,4 @@
+import 'package:bmi_app/calculate.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -28,9 +29,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-
-  double index;
-  String status;
+  final Calculate single = Calculate();
 
   TextEditingController person_weight;
   TextEditingController person_height;
@@ -46,12 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     person_weight = TextEditingController();
     person_height = TextEditingController();
     person_age = TextEditingController();
-    index = 0.0;
+    single.index = 0.0;
   }
 
   @override
@@ -74,15 +72,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 'assets/bmi.png',
                 height: height,
                 width: width,
+                key: Key("bmi_image"),
               ),
             ),
+            Spacer(),
             Container(
               color: Colors.grey,
               child: Form(
                 key: _key,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextFormField(
+                      key: Key("age"),
                       controller: person_age,
                       keyboardType: TextInputType.number,
                       onSaved: _save,
@@ -98,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     TextFormField(
+                      key: Key("height"),
                       controller: person_height,
                       keyboardType: TextInputType.number,
                       onSaved: _save,
@@ -111,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           icon: Icon(Icons.equalizer), hintText: 'Рост'),
                     ),
                     TextFormField(
+                      key: Key("weight"),
                       controller: person_weight,
                       keyboardType: TextInputType.number,
                       onSaved: _save,
@@ -124,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           icon: Icon(Icons.line_weight), hintText: 'Вес в кг'),
                     ),
                     RaisedButton(
+                      key: Key('calculate'),
                       color: Colors.pink,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(
@@ -136,14 +141,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     Text(
-                      index != 0 ? 'Ваш BMI ${index.toStringAsFixed(2)}' : "",
+                      single.index != 0 ? 'Ваш BMI ${single.index.toStringAsFixed(2)}' : "",
                       style: TextStyle(
                           fontSize: 19.0,
                           color: Colors.pink,
                           fontStyle: FontStyle.italic),
                     ),
                     Text(
-                      index > 0 ? status : "",
+                      single.index > 0 ? single.status : "",
                       style: TextStyle(
                           fontSize: 19.0,
                           color: Colors.pink,
@@ -155,7 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 ),
               ),
-            )
+            ),
+            Spacer(flex: 3,)
           ],
         ),
       ),
@@ -164,23 +170,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void calculate() {
     setState(() {
-      index = double.tryParse(person_weight.text.replaceAll(',', '.')) /
+      single.index = double.tryParse(person_weight.text.replaceAll(',', '.')) /
           pow(double.tryParse(person_height.text.replaceAll(',', '.')), 2) *
           10000;
-      if (index <= 16) {
-        status = 'Выраженный дефицит массы тела';
-      } else if (index >= 16 && index < 18.5) {
-        status = 'Недостаточная (дефицит) масса тела';
-      } else if (index >= 18.5 && index < 25) {
-        status = 'Норма';
-      } else if (index >= 25 && index < 30) {
-        status = 'Избыточная масса тела (предожирение)';
-      } else if (index >= 30 && index < 35) {
-        status = 'Ожирение';
-      } else if (index >= 35 && index < 40) {
-        status = 'Ожирение резкое';
+      if (single.index <= 16) {
+        single.status = 'Выраженный дефицит массы тела';
+      } else if (single.index >= 16 && single.index < 18.5) {
+        single.status = 'Недостаточная (дефицит) масса тела';
+      } else if (single.index >= 18.5 && single.index < 25) {
+        single.status = 'Норма';
+      } else if (single.index >= 25 && single.index < 30) {
+        single.status = 'Избыточная масса тела (предожирение)';
+      } else if (single.index >= 30 && single.index < 35) {
+        single.status = 'Ожирение';
+      } else if (single.index >= 35 && single.index < 40) {
+        single.status = 'Ожирение резкое';
       } else {
-        status = 'Очень резкое ожирение';
+        single.status = 'Очень резкое ожирение';
       }
     });
   }
