@@ -1,3 +1,4 @@
+![BMI](https://github.com/dmitry-shibanov/BMI/workflows/BMI/badge.svg)
 # bmi_app
 
 A new Flutter application.
