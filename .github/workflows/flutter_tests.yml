@@ -21,5 +21,3 @@ jobs:
       run: flutter pub get
     - name: flutter test
       run: flutter test
-    - name: flutter build apk
-      run: flutter build apk
